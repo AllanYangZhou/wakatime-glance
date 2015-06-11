@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+
+  "name": "WakaGime Glance",
+  "description": "Quickly displays a summary of your WakaTime dashboard",
+  "version": "1.0.0",
+
+  "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+    },
+  "permissions": [
+      "https://wakatime.com/api/v1/"
+    ]
+}
