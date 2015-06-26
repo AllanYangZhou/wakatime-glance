@@ -11,5 +11,15 @@
     },
   "permissions": [
       "https://wakatime.com/api/v1/"
+    ],
+  "content_scripts": [
+      {
+      "all_frames": false,
+      "matches": ["<all_urls>"],
+      "exclude_matches": [],
+        "js": [
+          "js/jquery-1.11.3.min.js"
+        ]
+      }
     ]
 }
