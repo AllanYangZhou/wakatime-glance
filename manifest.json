@@ -7,7 +7,7 @@
 
   "browser_action": {
       "default_icon": "icon.png",
-      "default_popup": "popup.html"
+      "default_popup": "index.html"
     },
   "permissions": [
       "https://wakatime.com/api/v1/"
@@ -18,7 +18,12 @@
       "matches": ["<all_urls>"],
       "exclude_matches": [],
         "js": [
-          "js/jquery-1.11.3.min.js"
+          "bower_components/angular/angular.min.js",
+          "bower_components/angular-animate/angular-animate.min.js",
+          "bower_components/angular-aria/angular-aria.min.js",
+          "bower_components/angular-messages/angular-messages.min.js",
+          "bower_components/angular-material/angular-material.min.js",
+          "bower_components/lodash/dist/lodash.min.js"
         ]
       }
     ]
