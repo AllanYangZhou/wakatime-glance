@@ -44,6 +44,7 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
     specifiedDate.setDate(specifiedDate.getDate() - 1);
     var formattedDate = formatDate(specifiedDate);
     popup.humanReadableDate = formattedDate;
+    popup.specifiedStat = '';
     getStatistics(formattedDate, formattedDate, function(result) {
       popup.specifiedStat = result;
     });
@@ -54,6 +55,7 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
     specifiedDate.setDate(specifiedDate.getDate() + 1);
     var formattedDate = formatDate(specifiedDate);
     popup.humanReadableDate = formattedDate;
+    popup.specifiedStat = '';
     getStatistics(formattedDate, formattedDate, function(result) {
       popup.specifiedStat = result;
     });

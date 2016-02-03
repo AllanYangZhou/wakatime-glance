@@ -3,7 +3,7 @@
 
   "name": "WakaTime Glance",
   "description": "Quickly displays a summary of your WakaTime dashboard",
-  "version": "1.1.0",
+  "version": "1.1.1",
 
   "browser_action": {
       "default_icon": "icon.png",
