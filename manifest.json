@@ -24,6 +24,10 @@
           "bower_components/angular-messages/angular-messages.min.js",
           "bower_components/angular-material/angular-material.min.js",
           "bower_components/lodash/dist/lodash.min.js"
+        ],
+        "svg": [
+          "img/ic_keyboard_arrow_right_black_24px.svg",
+          "img/ic_keyboard_arrow_left_black_24px.svg"
         ]
       }
     ]

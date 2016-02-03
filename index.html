@@ -1,6 +1,7 @@
 <!doctype html>
 <html ng-app="wakatimeGlance">
   <head>
+    <link href="bower_components/angular-material/angular-material.min.css" rel="stylesheet" />
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="bower_components/angular-aria/angular-aria.min.js"></script>
@@ -11,17 +12,35 @@
     <title>WakaTime Glance</title>
     <style>
       body {
-	min-width: 300px;
-	max-width: 300px;
+        min-width: 300px;
+        max-width: 300px;
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
       }
     </style>
   </head>
   <body>
     <div ng-controller="PopupController as popup">
-      <h4>Data for {{ popup.date }}</h4>
-      <h4>Today: {{ popup.data }}</h4>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h2>WakaTime Glance</h2>
+        </div>
+      </md-toolbar>
+      <md-content layout-padding>
+        <div style="text-align: center">
+          <md-button class="md-icon-button" ng-click="popup.decrementDate()">
+            <md-icon md-svg-src="img/ic_keyboard_arrow_left_black_24px.svg"></md-icon>
+          </md-button>
+          <strong>{{ popup.humanReadableDate }}</strong>
+          <md-button class="md-icon-button" ng-click="popup.incrementDate()" ng-disabled="popup.isDateCurrent()">
+            <md-icon md-svg-src="img/ic_keyboard_arrow_right_black_24px.svg"></md-icon>
+          </md-button>
+          <p style="font-size: xx-large;" ng-show="popup.stats">{{popup.stats}}</p>
+          <div ng-show="!popup.stats">
+            <br />
+            <md-progress-linear md-mode="query"></md-progress-linear>
+          </div>
+        </div>
+      </md-content>
     </div>
   </body>
 </html>
