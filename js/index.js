@@ -32,15 +32,12 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
       callback(result);
     }, function(err) {
       console.log(err);
+      // 401 -> Assume not logged in.
+      if (err.status === 401) {
+        popup.isLoggedIn = false;
+      }
     });
   };
-
-  // The single date which we are displaying stats for.
-  var specifiedDate = new Date();
-
-  popup.humanReadableDate = ''; // Human readable version of specifiedDate.
-  popup.specifiedStat = ''; // The statistics for specifiedDate.
-  popup.sevenDayStat = ''; // The statistics for the last seven days.
 
   // Decrease specifiedDate by one day, and update stats.
   popup.decrementDate = function() {
@@ -69,6 +66,15 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
       (now.getMonth() === specifiedDate.getMonth()) &&
       (now.getDate() === specifiedDate.getDate());
   };
+
+  // The single date which we are displaying stats for.
+  var specifiedDate = new Date();
+
+  popup.humanReadableDate = ''; // Human readable version of specifiedDate.
+  popup.specifiedStat = ''; // The statistics for specifiedDate.
+  popup.sevenDayStat = ''; // The statistics for the last seven days.
+
+  popup.isLoggedIn = true;
 
   // Initialize stats.
   var nowFormatted = formatDate(new Date());
