@@ -33,6 +33,7 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
 
   popup.humanReadableDate = ''; // Human readable version of specifiedDate.
   popup.stats = ''; // The actual statistics
+  popup.sevenDayStat = ''; // Weekly total
 
   // Decrease specifiedDate by one day, and update stats.
   popup.decrementDate = function() {
@@ -56,4 +57,10 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
 
   // Initialize stats.
   setStats(specifiedDate);
+  var sevenDaysRequest = $http.get(WAKATIME_API_PREFIX +
+    'users/current/stats/last_7_days').then(function(response) {
+    popup.sevenDayStat = response.data.data.human_readable_total;
+  }, function(err) {
+    console.log(err);
+  });
 }]);

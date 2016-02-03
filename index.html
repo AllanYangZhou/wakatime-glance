@@ -34,8 +34,19 @@
           <md-button class="md-icon-button" ng-click="popup.incrementDate()" ng-disabled="popup.isDateCurrent()">
             <md-icon md-svg-src="img/ic_keyboard_arrow_right_black_24px.svg"></md-icon>
           </md-button>
-          <p style="font-size: xx-large;" ng-show="popup.stats">{{popup.stats}}</p>
+          <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.stats">{{popup.stats}}</p>
           <div ng-show="!popup.stats">
+            <br />
+            <md-progress-linear md-mode="query"></md-progress-linear>
+          </div>
+        </div>
+      </md-content>
+      <md-divider></md-divider>
+      <md-content layout-padding>
+        <div style="text-align: center">
+          <strong>Last 7 Days</strong>
+          <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.sevenDayStat">{{ popup.sevenDayStat }}</p>
+          <div ng-show="!popup.sevenDayStat">
             <br />
             <md-progress-linear md-mode="query"></md-progress-linear>
           </div>
