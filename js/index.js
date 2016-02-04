@@ -50,40 +50,32 @@ wakatimeGlance.controller('PopupController', [
       );
     };
 
-    // Returns formatted total (a stinrg) for a given summary
+    // Returns list of totals for each day in the summary (data returned from
+    // API).
+    var getDailyTotalsFromSummary = function(summary) {
+      var now = new Date();
+      return _.map(summary, function(val, index) {
+        var date = new Date();
+        date.setDate(now.getDate() - 6 + index);
+        return {
+          date: date,
+          time: secondsToHoursAndMinutes(val.grand_total.total_seconds),
+          dayBreakdown: _.map(val.projects, function(proj) {
+            return {
+              name: proj.name,
+              time: secondsToHoursAndMinutes(proj.total_seconds)
+            };
+          })
+        };
+      });
+    };
+
+    // Returns formatted total (a string) for a given summary
     // (data returned from API).
-    var getTotalsFromSummary = function(summary) {
+    var getWeekTotalFromSummary = function(summary) {
       return secondsToHoursAndMinutes(_.sumBy(summary, function(o) {
         return o.grand_total.total_seconds;
       }));
-    };
-
-    // Decrease specifiedDate by one day, and update stats.
-    popup.decrementDate = function() {
-      popup.specifiedDate.setDate(popup.specifiedDate.getDate() - 1);
-      var formattedDate = formatMonthDayYear(popup.specifiedDate);
-      popup.specifiedDateTotal = '';
-      getSummary(formattedDate, formattedDate, function(summary) {
-        popup.specifiedDateTotal = getTotalsFromSummary(summary);
-      });
-    };
-
-    // Increase specifiedDate by one day, and update stats.
-    popup.incrementDate = function() {
-      popup.specifiedDate.setDate(popup.specifiedDate.getDate() + 1);
-      var formattedDate = formatMonthDayYear(popup.specifiedDate);
-      popup.specifiedDateTotal = '';
-      getSummary(formattedDate, formattedDate, function(summary) {
-        popup.specifiedDateTotal = getTotalsFromSummary(summary);
-      });
-    };
-
-    // Checks whether specifiedDate is the current date.
-    popup.isDateCurrent = function() {
-      var now = new Date();
-      return (now.getFullYear() === popup.specifiedDate.getFullYear()) &&
-        (now.getMonth() === popup.specifiedDate.getMonth()) &&
-        (now.getDate() === popup.specifiedDate.getDate());
     };
 
     // Converts date into human readable format.
@@ -91,24 +83,30 @@ wakatimeGlance.controller('PopupController', [
       return formatMonthDayYear(date);
     };
 
-    // The single date for which we are displaying stats.
-    popup.specifiedDate = new Date();
-    popup.specifiedDateTotal = '';
+    popup.showDetails = function(index) {
+      popup.activeDay = popup.dailyTotals[6 - index];
+    };
+
+    popup.closeDetails = function() {
+      popup.activeDay = null;
+    };
+
+    popup.todayTotal = '';
+    popup.dailyTotals = [];
     popup.sevenDayTotal = '';
-    popup.isLoggedIn = true;
     popup.projectTotals = [];
+    popup.isLoggedIn = true;
+    popup.activeDay = null;
 
     var init = function() {
       var now = formatMonthDayYear(new Date());
-      getSummary(now, now, function(summary){
-        popup.specifiedDateTotal = getTotalsFromSummary(summary);
-      });
-
       var d = new Date();
       d.setDate(d.getDate() - 6);
       var sixDaysAgo = formatMonthDayYear(d);
       getSummary(sixDaysAgo, now, function(summary) {
-        popup.sevenDayTotal = getTotalsFromSummary(summary);
+        popup.dailyTotals = getDailyTotalsFromSummary(summary);
+        popup.todayTotal = popup.dailyTotals[6].time;
+        popup.sevenDayTotal = getWeekTotalFromSummary(summary);
         popup.projectTotals = getProjectTotalsFromSummary(summary);
       });
     };

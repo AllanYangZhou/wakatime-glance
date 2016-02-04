@@ -32,18 +32,12 @@
         </div>
       </md-toolbar>
       <md-tabs ng-if="popup.isLoggedIn">
-        <md-tab label="Totals" >
+        <md-tab label="Summary" >
           <md-content layout-padding>
             <div style="text-align: center">
-              <md-button class="md-icon-button" ng-click="popup.decrementDate()">
-                <md-icon md-svg-src="img/ic_keyboard_arrow_left_black_24px.svg"></md-icon>
-              </md-button>
-              <strong>{{ popup.formatDate(popup.specifiedDate) }}</strong>
-              <md-button class="md-icon-button" ng-click="popup.incrementDate()" ng-disabled="popup.isDateCurrent()">
-                <md-icon md-svg-src="img/ic_keyboard_arrow_right_black_24px.svg"></md-icon>
-              </md-button>
-              <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.specifiedDateTotal">{{popup.specifiedDateTotal}}</p>
-              <div ng-show="!popup.specifiedDateTotal">
+              <strong>Last 7 Days</strong>
+              <p style="font-size: xx-large; margin-top: 10px; margin-bottom: 0px;" ng-show="popup.sevenDayTotal">{{ popup.sevenDayTotal }}</p>
+              <div ng-show="!popup.sevenDayTotal">
                 <br />
                 <md-progress-linear md-mode="query"></md-progress-linear>
               </div>
@@ -52,13 +46,42 @@
           <md-divider></md-divider>
           <md-content layout-padding>
             <div style="text-align: center">
-              <strong>Last 7 Days</strong>
-              <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 10px" ng-show="popup.sevenDayTotal">{{ popup.sevenDayTotal }}</p>
-              <div ng-show="!popup.sevenDayTotal">
+              <strong>Today</strong>
+              <p style="font-size: xx-large; margin-top: 10px; margin-bottom: 0px;" ng-show="popup.todayTotal">{{popup.todayTotal}}</p>
+              <div ng-show="!popup.todayTotal">
                 <br />
                 <md-progress-linear md-mode="query"></md-progress-linear>
               </div>
             </div>
+          </md-content>
+        </md-tab>
+        <md-tab label="Details">
+          <md-content ng-show="!popup.activeDay">
+            <md-list>
+              <md-list-item ng-click="popup.showDetails($index)" ng-repeat="day in popup.dailyTotals | orderBy:'':true">
+                <div class="md-list-item-text" style="font-size: medium" layout="row" layout-fill layout-align="left center">
+                  <strong>{{ popup.formatDate(day.date) }}</strong>
+                  <span flex></span>
+                  <p>{{ day.time}}</p>
+                </div>
+              </md-list-item>
+            </md-list>
+          </md-content>
+          <md-content ng-show="popup.activeDay" layout-padding style="text-align: center; font-size: medium">
+            <md-button ng-click="popup.closeDetails()">
+              <md-icon md-svg-src="img/ic_keyboard_backspace_black_24px.svg"></md-icon>
+              Back
+            </md-button>
+            <br />
+            <strong>{{ popup.formatDate(popup.activeDay.date) }}</strong>
+            <md-list>
+              <md-list-item class="md-2-line" ng-repeat="project in popup.activeDay.dayBreakdown">
+                <div class="md-list-item-text">
+                  {{ project.name }}
+                  <p style="font-size: large">{{ project.time }}</p>
+                </div>
+              </md-list-item>
+            </md-list>
           </md-content>
         </md-tab>
         <md-tab label="Projects">
