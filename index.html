@@ -68,30 +68,18 @@
             </md-list>
           </md-content>
           <md-content ng-show="popup.activeDay" layout-padding style="text-align: center; font-size: medium">
-            <md-button ng-click="popup.closeDetails()">
-              <md-icon md-svg-src="img/ic_keyboard_backspace_black_24px.svg"></md-icon>
-              Back
-            </md-button>
-            <br />
-            <strong>{{ popup.formatDate(popup.activeDay.date) }}</strong>
             <md-list>
+              <md-list-item>
+                <md-button class="md-raised md-fab md-mini md-warn" ng-click="popup.closeDetails()">
+                  <md-icon md-svg-src="img/ic_keyboard_backspace_black_24px.svg"></md-icon>
+                </md-button>
+                <p style="text-align: right"><strong>{{ popup.formatDate(popup.activeDay.date) }}</strong></p>
+              </md-list-item>
+              <md-divider></md-divider>
               <md-list-item class="md-2-line" ng-repeat="project in popup.activeDay.dayBreakdown">
                 <div class="md-list-item-text">
                   {{ project.name }}
                   <p style="font-size: large">{{ project.time }}</p>
-                </div>
-              </md-list-item>
-            </md-list>
-          </md-content>
-        </md-tab>
-        <md-tab label="Projects">
-          <md-content>
-            <md-list>
-              <md-subheader class="md-no-sticky" style="text-align: center;">7 Day Total</md-subheader>
-              <md-list-item class="md-2-line" ng-repeat="project in popup.projectTotals">
-                <div class="md-list-item-text" style="text-align: center;">
-                  <strong>{{project.name}}</strong>
-                  <p style="font-size: x-large">{{ project.time }}</p>
                 </div>
               </md-list-item>
             </md-list>
