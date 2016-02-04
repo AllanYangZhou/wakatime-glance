@@ -8,11 +8,12 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
   var secondsToHoursAndMinutes = function(seconds) {
     var hours = _.floor(seconds / 3600);
     var minutes = _.floor((seconds % 3600) / 60);
-    return _.join([String(hours), 'hrs', String(minutes), 'min'], ' ');
+    return (hours > 0 ? String(hours) + ' hrs ' : '') +
+      String(minutes) + ' min';
   };
 
   // Format Date object into MM/DD/YYYY format for WakaTime API.
-  var formatDate = function(date) {
+  var formatMonthDayYear = function(date) {
     return _.join([
       date.getMonth() + 1,
       date.getDate(),
@@ -20,7 +21,8 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
     ], '/');
   };
 
-  var getStatistics = function(startDate, endDate, callback) {
+  // Fetch total seconds for specified date range, applies callback to result.
+  var getTotalSecondsForRange = function(startDate, endDate, callback) {
     var requestFormatted = WAKATIME_API_PREFIX +
       'users/current/summaries?start=' + startDate + '&end=' + endDate;
     $http.get(requestFormatted).then(function(response) {
@@ -41,55 +43,54 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
 
   // Decrease specifiedDate by one day, and update stats.
   popup.decrementDate = function() {
-    specifiedDate.setDate(specifiedDate.getDate() - 1);
-    var formattedDate = formatDate(specifiedDate);
-    popup.humanReadableDate = formattedDate;
-    popup.specifiedStat = '';
-    getStatistics(formattedDate, formattedDate, function(result) {
-      popup.specifiedStat = result;
+    popup.specifiedDate.setDate(popup.specifiedDate.getDate() - 1);
+    var formattedDate = formatMonthDayYear(popup.specifiedDate);
+    popup.specifiedDateTotal = '';
+    getTotalSecondsForRange(formattedDate, formattedDate, function(result) {
+      popup.specifiedDateTotal = result;
     });
   };
 
   // Increase specifiedDate by one day, and update stats.
   popup.incrementDate = function() {
-    specifiedDate.setDate(specifiedDate.getDate() + 1);
-    var formattedDate = formatDate(specifiedDate);
-    popup.humanReadableDate = formattedDate;
-    popup.specifiedStat = '';
-    getStatistics(formattedDate, formattedDate, function(result) {
-      popup.specifiedStat = result;
+    popup.specifiedDate.setDate(popup.specifiedDate.getDate() + 1);
+    var formattedDate = formatMonthDayYear(popup.specifiedDate);
+    popup.specifiedDateTotal = '';
+    getTotalSecondsForRange(formattedDate, formattedDate, function(result) {
+      popup.specifiedDateTotal = result;
     });
   };
 
   // Checks whether specifiedDate is the current date.
   popup.isDateCurrent = function() {
     var now = new Date();
-    return (now.getFullYear() === specifiedDate.getFullYear()) &&
-      (now.getMonth() === specifiedDate.getMonth()) &&
-      (now.getDate() === specifiedDate.getDate());
+    return (now.getFullYear() === popup.specifiedDate.getFullYear()) &&
+      (now.getMonth() === popup.specifiedDate.getMonth()) &&
+      (now.getDate() === popup.specifiedDate.getDate());
   };
 
-  // The single date which we are displaying stats for.
-  var specifiedDate = new Date();
+  // Converts date into human readable format.
+  popup.formatDate = function(date) {
+    return formatMonthDayYear(date);
+  };
 
-  popup.humanReadableDate = ''; // Human readable version of specifiedDate.
-  popup.specifiedStat = ''; // The statistics for specifiedDate.
-  popup.sevenDayStat = ''; // The statistics for the last seven days.
-
+  // The single date for which we are displaying stats.
+  popup.specifiedDate = new Date();
+  popup.specifiedDateTotal = '';
+  popup.sevenDayTotal = '';
   popup.isLoggedIn = true;
 
   // Initialize stats.
-  var nowFormatted = formatDate(new Date());
-  popup.humanReadableDate = nowFormatted;
-  getStatistics(nowFormatted, nowFormatted, function(result){
-    popup.specifiedStat = result;
+  var now = formatMonthDayYear(new Date());
+  getTotalSecondsForRange(now, now, function(result){
+    popup.specifiedDateTotal = result;
   });
 
   var sixDaysAgo = new Date();
   sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-  getStatistics(
-    formatDate(sixDaysAgo), formatDate(new Date()), function(result) {
-      popup.sevenDayStat = result;
+  getTotalSecondsForRange(
+    formatMonthDayYear(sixDaysAgo), formatMonthDayYear(new Date()), function(result) {
+      popup.sevenDayTotal = result;
     }
   );
 }]);

@@ -31,12 +31,12 @@
             <md-button class="md-icon-button" ng-click="popup.decrementDate()">
               <md-icon md-svg-src="img/ic_keyboard_arrow_left_black_24px.svg"></md-icon>
             </md-button>
-            <strong>{{ popup.humanReadableDate }}</strong>
+            <strong>{{ popup.formatDate(popup.specifiedDate) }}</strong>
             <md-button class="md-icon-button" ng-click="popup.incrementDate()" ng-disabled="popup.isDateCurrent()">
               <md-icon md-svg-src="img/ic_keyboard_arrow_right_black_24px.svg"></md-icon>
             </md-button>
-            <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.specifiedStat">{{popup.specifiedStat}}</p>
-            <div ng-show="!popup.specifiedStat">
+            <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.specifiedDateTotal">{{popup.specifiedDateTotal}}</p>
+            <div ng-show="!popup.specifiedDateTotal">
               <br />
               <md-progress-linear md-mode="query"></md-progress-linear>
             </div>
@@ -46,8 +46,8 @@
         <md-content layout-padding>
           <div style="text-align: center">
             <strong>Last 7 Days</strong>
-            <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 10px" ng-show="popup.sevenDayStat">{{ popup.sevenDayStat }}</p>
-            <div ng-show="!popup.sevenDayStat">
+            <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 10px" ng-show="popup.sevenDayTotal">{{ popup.sevenDayTotal }}</p>
+            <div ng-show="!popup.sevenDayTotal">
               <br />
               <md-progress-linear md-mode="query"></md-progress-linear>
             </div>
