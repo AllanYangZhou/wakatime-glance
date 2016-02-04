@@ -80,17 +80,19 @@ wakatimeGlance.controller('PopupController', ['$http', function($http) {
   popup.sevenDayTotal = '';
   popup.isLoggedIn = true;
 
-  // Initialize stats.
-  var now = formatMonthDayYear(new Date());
-  getTotalSecondsForRange(now, now, function(result){
-    popup.specifiedDateTotal = result;
-  });
+  var init = function() {
+    var now = formatMonthDayYear(new Date());
+    getTotalSecondsForRange(now, now, function(result){
+      popup.specifiedDateTotal = result;
+    });
 
-  var sixDaysAgo = new Date();
-  sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-  getTotalSecondsForRange(
-    formatMonthDayYear(sixDaysAgo), formatMonthDayYear(new Date()), function(result) {
+    var d = new Date();
+    d.setDate(d.getDate() - 6);
+    var sixDaysAgo = formatMonthDayYear(d);
+    getTotalSecondsForRange(sixDaysAgo, now, function(result) {
       popup.sevenDayTotal = result;
-    }
-  );
+    });
+  };
+
+  init(); // Initialize everything.
 }]);
