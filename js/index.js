@@ -22,25 +22,40 @@ wakatimeGlance.controller('PopupController', [
       ], '/');
     };
 
-    // Fetch total seconds for specified date range, applies callback to result.
-    var getTotalSecondsForRange = function(startDate, endDate, callback) {
+    // Fetch summary for date range from WakaTime api, then call callback.
+    var getSummary = function(startDate, endDate, callback) {
       var requestFormatted = WAKATIME_API_PREFIX +
         'users/current/summaries?start=' + startDate + '&end=' + endDate;
       $http.get(requestFormatted).then(function(response) {
-        console.log(response);
-        var result = secondsToHoursAndMinutes(
-          _.sumBy(response.data.data, function(o) {
-            return o.grand_total.total_seconds;
-          })
-        );
-        callback(result);
+        callback(response.data.data);
       }, function(err) {
         console.log(err);
-        // 401 -> Assume not logged in.
         if (err.status === 401) {
           popup.isLoggedIn = false;
         }
       });
+    };
+
+    // Returns formatted project totals for a given summary
+    // (data returned from API). Returns a list.
+    var getProjectTotalsFromSummary = function(summary) {
+      return _.map(
+        _.groupBy(_.flatten(_.map(summary, 'projects')), 'name'),
+        function(val, name) {
+          return {
+            name: name,
+            time: secondsToHoursAndMinutes(_.sumBy(val, 'total_seconds'))
+          };
+        }
+      );
+    };
+
+    // Returns formatted total (a stinrg) for a given summary
+    // (data returned from API).
+    var getTotalsFromSummary = function(summary) {
+      return secondsToHoursAndMinutes(_.sumBy(summary, function(o) {
+        return o.grand_total.total_seconds;
+      }));
     };
 
     // Decrease specifiedDate by one day, and update stats.
@@ -48,8 +63,8 @@ wakatimeGlance.controller('PopupController', [
       popup.specifiedDate.setDate(popup.specifiedDate.getDate() - 1);
       var formattedDate = formatMonthDayYear(popup.specifiedDate);
       popup.specifiedDateTotal = '';
-      getTotalSecondsForRange(formattedDate, formattedDate, function(result) {
-        popup.specifiedDateTotal = result;
+      getSummary(formattedDate, formattedDate, function(summary) {
+        popup.specifiedDateTotal = getTotalsFromSummary(summary);
       });
     };
 
@@ -58,8 +73,8 @@ wakatimeGlance.controller('PopupController', [
       popup.specifiedDate.setDate(popup.specifiedDate.getDate() + 1);
       var formattedDate = formatMonthDayYear(popup.specifiedDate);
       popup.specifiedDateTotal = '';
-      getTotalSecondsForRange(formattedDate, formattedDate, function(result) {
-        popup.specifiedDateTotal = result;
+      getSummary(formattedDate, formattedDate, function(summary) {
+        popup.specifiedDateTotal = getTotalsFromSummary(summary);
       });
     };
 
@@ -81,18 +96,20 @@ wakatimeGlance.controller('PopupController', [
     popup.specifiedDateTotal = '';
     popup.sevenDayTotal = '';
     popup.isLoggedIn = true;
+    popup.projectTotals = [];
 
     var init = function() {
       var now = formatMonthDayYear(new Date());
-      getTotalSecondsForRange(now, now, function(result){
-        popup.specifiedDateTotal = result;
+      getSummary(now, now, function(summary){
+        popup.specifiedDateTotal = getTotalsFromSummary(summary);
       });
 
       var d = new Date();
       d.setDate(d.getDate() - 6);
       var sixDaysAgo = formatMonthDayYear(d);
-      getTotalSecondsForRange(sixDaysAgo, now, function(result) {
-        popup.sevenDayTotal = result;
+      getSummary(sixDaysAgo, now, function(summary) {
+        popup.sevenDayTotal = getTotalsFromSummary(summary);
+        popup.projectTotals = getProjectTotalsFromSummary(summary);
       });
     };
 

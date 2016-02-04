@@ -19,7 +19,7 @@
     </style>
   </head>
   <body>
-    <div ng-controller="PopupController as popup">
+    <div ng-controller="PopupController as popup" layout="column" layout-fill>
       <md-toolbar>
         <div class="md-toolbar-tools">
           <h2>WakaTime Glance</h2>
@@ -34,44 +34,60 @@
           </md-button>
         </div>
       </md-toolbar>
-      <div ng-show="popup.isLoggedIn">
-        <md-content layout-padding>
-          <div style="text-align: center">
-            <md-button class="md-icon-button" ng-click="popup.decrementDate()">
-              <md-icon md-svg-src="img/ic_keyboard_arrow_left_black_24px.svg"></md-icon>
-            </md-button>
-            <strong>{{ popup.formatDate(popup.specifiedDate) }}</strong>
-            <md-button class="md-icon-button" ng-click="popup.incrementDate()" ng-disabled="popup.isDateCurrent()">
-              <md-icon md-svg-src="img/ic_keyboard_arrow_right_black_24px.svg"></md-icon>
-            </md-button>
-            <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.specifiedDateTotal">{{popup.specifiedDateTotal}}</p>
-            <div ng-show="!popup.specifiedDateTotal">
-              <br />
-              <md-progress-linear md-mode="query"></md-progress-linear>
-            </div>
+      <md-tabs flex>
+        <md-tab label="Totals" >
+          <div ng-show="popup.isLoggedIn">
+            <md-content layout-padding>
+              <div style="text-align: center">
+                <md-button class="md-icon-button" ng-click="popup.decrementDate()">
+                  <md-icon md-svg-src="img/ic_keyboard_arrow_left_black_24px.svg"></md-icon>
+                </md-button>
+                <strong>{{ popup.formatDate(popup.specifiedDate) }}</strong>
+                <md-button class="md-icon-button" ng-click="popup.incrementDate()" ng-disabled="popup.isDateCurrent()">
+                  <md-icon md-svg-src="img/ic_keyboard_arrow_right_black_24px.svg"></md-icon>
+                </md-button>
+                <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 0px" ng-show="popup.specifiedDateTotal">{{popup.specifiedDateTotal}}</p>
+                <div ng-show="!popup.specifiedDateTotal">
+                  <br />
+                  <md-progress-linear md-mode="query"></md-progress-linear>
+                </div>
+              </div>
+            </md-content>
+            <md-divider></md-divider>
+            <md-content layout-padding>
+              <div style="text-align: center">
+                <strong>Last 7 Days</strong>
+                <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 10px" ng-show="popup.sevenDayTotal">{{ popup.sevenDayTotal }}</p>
+                <div ng-show="!popup.sevenDayTotal">
+                  <br />
+                  <md-progress-linear md-mode="query"></md-progress-linear>
+                </div>
+              </div>
+            </md-content>
           </div>
-        </md-content>
-        <md-divider></md-divider>
-        <md-content layout-padding>
-          <div style="text-align: center">
-            <strong>Last 7 Days</strong>
-            <p style="font-size: xx-large; margin-bottom: 0px; margin-top: 10px" ng-show="popup.sevenDayTotal">{{ popup.sevenDayTotal }}</p>
-            <div ng-show="!popup.sevenDayTotal">
-              <br />
-              <md-progress-linear md-mode="query"></md-progress-linear>
-            </div>
+          <div ng-show="!popup.isLoggedIn">
+            <h2 style="text-align: center">Oops! Looks like you're not logged in.</h2>
+            <md-content layout-padding>
+              <div layout="row" layout-align="center center">
+                <md-button class="md-raised md-primary" href="https://wakatime.com/login" target="_blank">Log In</md-button>
+              </div>
+              <h4 style="text-align: center">(will open in new tab)</h4>
+            </md-content>
           </div>
-        </md-content>
-      </div>
-      <div ng-show="!popup.isLoggedIn">
-        <h2 style="text-align: center">Oops! Looks like you're not logged in.</h2>
-        <md-content layout-padding>
-          <div layout="row" layout-align="center center">
-            <md-button class="md-raised md-primary" href="https://wakatime.com/login" target="_blank">Log In</md-button>
-          </div>
-          <h4 style="text-align: center">(will open in new tab)</h4>
-        </md-content>
-      </div>
+        </md-tab>
+        <md-tab label="Projects">
+          <md-content>
+            <md-list>
+              <md-list-item class="md-2-line" ng-repeat="project in popup.projectTotals">
+                <div class="md-list-item-text" style="text-align: center;">
+                  <strong>{{project.name}}</strong>
+                  <p style="font-size: x-large">{{ project.time }}</p>
+                </div>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </md-tab>
+      </md-tabs>
     </div>
   </body>
 </html>
