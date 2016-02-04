@@ -82,6 +82,9 @@
                   <p style="font-size: large">{{ project.time }}</p>
                 </div>
               </md-list-item>
+              <md-list-item ng-show="popup.activeDay.dayBreakdown.length === 0">
+                <p>No projects to show.</p>
+              </md-list-item>
             </md-list>
           </md-content>
         </md-tab>
