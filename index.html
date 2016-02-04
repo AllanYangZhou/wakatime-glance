@@ -56,8 +56,16 @@
           </md-content>
         </md-tab>
         <md-tab label="Details">
-          <md-content ng-show="!popup.activeDay">
+          <md-content ng-if="!popup.activeDay">
             <md-list>
+              <md-list-item>
+              <div class="md-list-item-text" style="font-size: medium" layout="row" layout-fill layout-align="left center">
+                <strong>7 Day Avg</strong>
+                <span flex></span>
+                {{ popup.sevenDayAverage }}
+              </div>
+              </md-list-item>
+              <md-divider></md-divider>
               <md-list-item ng-click="popup.showDetails($index)" ng-repeat="day in popup.dailyTotals | orderBy:'':true">
                 <div class="md-list-item-text" style="font-size: medium" layout="row" layout-fill layout-align="left center">
                   <strong>{{ popup.formatDate(day.date) }}</strong>
@@ -67,7 +75,7 @@
               </md-list-item>
             </md-list>
           </md-content>
-          <md-content ng-show="popup.activeDay" layout-padding style="text-align: center; font-size: medium">
+          <md-content ng-if="popup.activeDay" layout-padding style="text-align: center; font-size: medium">
             <md-list>
               <md-list-item>
                 <md-button class="md-raised md-fab md-mini md-warn" ng-click="popup.closeDetails()">
@@ -101,4 +109,3 @@
     </div>
   </body>
 </html>
-

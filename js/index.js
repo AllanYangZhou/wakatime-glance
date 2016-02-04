@@ -78,6 +78,13 @@ wakatimeGlance.controller('PopupController', [
       }));
     };
 
+    // Returns formatted average (a string) for a given summary.
+    var getWeekAverageFromSummary = function(summary) {
+      return secondsToHoursAndMinutes(_.floor(_.sumBy(summary, function(o) {
+        return o.grand_total.total_seconds;
+      }) / 7));
+    };
+
     // Converts date into human readable format.
     popup.formatDate = function(date) {
       return formatMonthDayYear(date);
@@ -94,6 +101,7 @@ wakatimeGlance.controller('PopupController', [
     popup.todayTotal = '';
     popup.dailyTotals = [];
     popup.sevenDayTotal = '';
+    popup.sevenDayAverage = '';
     popup.projectTotals = [];
     popup.isLoggedIn = true;
     popup.activeDay = null;
@@ -107,6 +115,7 @@ wakatimeGlance.controller('PopupController', [
         popup.dailyTotals = getDailyTotalsFromSummary(summary);
         popup.todayTotal = popup.dailyTotals[6].time;
         popup.sevenDayTotal = getWeekTotalFromSummary(summary);
+        popup.sevenDayAverage = getWeekAverageFromSummary(summary);
         popup.projectTotals = getProjectTotalsFromSummary(summary);
       });
     };
