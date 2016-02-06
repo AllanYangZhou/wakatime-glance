@@ -32,6 +32,9 @@ wakatimeGlance.controller('PopupController', [
         console.log(err);
         if (err.status === 401) {
           popup.isLoggedIn = false;
+        } else if (err.status === -1) {
+          console.log('No longer connected');
+          popup.isConnected = false;
         }
       });
     };
@@ -112,6 +115,7 @@ wakatimeGlance.controller('PopupController', [
     popup.sevenDayAverage = '';
     popup.sevenDayDetails = null;
     popup.isLoggedIn = true;
+    popup.isConnected = true;
     popup.activeDay = null;
 
     var projectTotals = [];

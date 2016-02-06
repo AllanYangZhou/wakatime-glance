@@ -14,12 +14,13 @@
       body {
         min-width: 300px;
         max-width: 300px;
+        max-height: 300px;
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
       }
     </style>
   </head>
   <body>
-    <div ng-controller="PopupController as popup">
+    <div ng-controller="PopupController as popup" style="height: 100%;">
       <md-toolbar>
         <div class="md-toolbar-tools">
           <h2>WakaTime Glance</h2>
@@ -31,7 +32,7 @@
           </md-button>
         </div>
       </md-toolbar>
-      <md-tabs ng-if="popup.isLoggedIn">
+      <md-tabs ng-if="popup.isLoggedIn && popup.isConnected">
         <md-tab label="Summary" >
           <md-content layout-padding>
             <div style="text-align: center">
@@ -124,6 +125,9 @@
           </div>
           <h4 style="text-align: center">(will open in new tab)</h4>
         </md-content>
+      </div>
+      <div ng-if="!popup.isConnected" layout="row" layout-align="center center" layout-fill>
+        <h2>Could not connect to WakaTime!</h2>
       </div>
     </div>
   </body>
