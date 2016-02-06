@@ -56,9 +56,9 @@
           </md-content>
         </md-tab>
         <md-tab label="Details">
-          <md-content ng-if="!popup.activeDay">
+          <md-content ng-if="!(popup.activeDay || popup.sevenDayDetails)">
             <md-list>
-              <md-list-item>
+              <md-list-item ng-click="popup.showSevenDayDetails()">
               <div class="md-list-item-text" style="font-size: medium" layout="row" layout-fill layout-align="left center">
                 <strong>7 Day Avg</strong>
                 <span flex></span>
@@ -75,10 +75,27 @@
               </md-list-item>
             </md-list>
           </md-content>
+          <md-content ng-if="popup.sevenDayDetails" layout-padding style="text-align: center; font-size: medium">
+            <md-list>
+              <md-list-item>
+                <md-button class="md-raised md-fab md-mini" ng-click="popup.closeSevenDayDetails()">
+                  <md-icon md-svg-src="img/ic_keyboard_backspace_black_24px.svg"></md-icon>
+                </md-button>
+                <p style="text-align: right"><strong>7 Day Avg</strong></p>
+              </md-list-item>
+              <md-divider></md-divider>
+              <md-list-item class="md-2-line" ng-repeat="project in popup.sevenDayDetails">
+                <div class="md-list-item-text">
+                  {{ project.name }}
+                  <p style="font-size: large">{{ project.time }}</p>
+                </div>
+              </md-list-item>
+            </md-list>
+          </md-content>
           <md-content ng-if="popup.activeDay" layout-padding style="text-align: center; font-size: medium">
             <md-list>
               <md-list-item>
-                <md-button class="md-raised md-fab md-mini md-warn" ng-click="popup.closeDetails()">
+                <md-button class="md-raised md-fab md-mini" ng-click="popup.closeDetails()">
                   <md-icon md-svg-src="img/ic_keyboard_backspace_black_24px.svg"></md-icon>
                 </md-button>
                 <p style="text-align: right"><strong>{{ popup.formatDate(popup.activeDay.date) }}</strong></p>
@@ -101,7 +118,9 @@
         <h2 style="text-align: center">Oops! Looks like you're not logged in.</h2>
         <md-content layout-padding>
           <div layout="row" layout-align="center center">
-            <md-button class="md-raised md-primary" href="https://wakatime.com/login" target="_blank">Log In</md-button>
+            <md-button class="md-raised md-primary" href="https://wakatime.com/login" target="_blank">
+              Log In
+            </md-button>
           </div>
           <h4 style="text-align: center">(will open in new tab)</h4>
         </md-content>

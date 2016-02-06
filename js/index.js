@@ -94,18 +94,27 @@ wakatimeGlance.controller('PopupController', [
       popup.activeDay = popup.dailyTotals[6 - index];
     };
 
+    popup.showSevenDayDetails = function() {
+      popup.sevenDayDetails = projectTotals;
+    };
+
     popup.closeDetails = function() {
       popup.activeDay = null;
+    };
+
+    popup.closeSevenDayDetails = function() {
+      popup.sevenDayDetails = null;
     };
 
     popup.todayTotal = '';
     popup.dailyTotals = [];
     popup.sevenDayTotal = '';
     popup.sevenDayAverage = '';
-    popup.projectTotals = [];
+    popup.sevenDayDetails = null;
     popup.isLoggedIn = true;
     popup.activeDay = null;
 
+    var projectTotals = [];
     var init = function() {
       var now = formatMonthDayYear(new Date());
       var d = new Date();
@@ -116,7 +125,7 @@ wakatimeGlance.controller('PopupController', [
         popup.todayTotal = popup.dailyTotals[6].time;
         popup.sevenDayTotal = getWeekTotalFromSummary(summary);
         popup.sevenDayAverage = getWeekAverageFromSummary(summary);
-        popup.projectTotals = getProjectTotalsFromSummary(summary);
+        projectTotals = getProjectTotalsFromSummary(summary);
       });
     };
 
